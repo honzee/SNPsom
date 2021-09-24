@@ -54,7 +54,7 @@ shinyAppServer <- function(input, output) {
   })
 
   output$memory <- renderText({
-    paste0("Mutect2 will require approximately: ", input$parallel*15, "GB of RAM \nTotal system RAM is approximately: ", round(as.numeric(grep("[0-9]+", strsplit(system("cat /proc/meminfo", intern = TRUE)[1], split = " ")[[1]], value = TRUE))/1000000))
+    paste0("Mutect2 will require approximately: ", input$parallel*15, "GB of RAM. \n Total system RAM is approximately: ", round(as.numeric(grep("[0-9]+", strsplit(system("cat /proc/meminfo", intern = TRUE)[1], split = " ")[[1]], value = TRUE))/1000000))
   })
 
 

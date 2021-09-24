@@ -119,35 +119,32 @@ Mutect2 = function(metadata, input_dir, output_dir, reference, parallel) {
   # check whether all tumour samples have thier control and if not filter them out
   metadata_t = metadata_t[metadata_t$patient %in% metadata_c$patient, ]
 
-  for (i in 1:ceiling(nrow(metadata_t)/parallel)) {
-    if (nrow(metadata_t) != 0) {
-      sample_start = ((i-1)*parallel)+1
-      if (i == ceiling(nrow(metadata_t)/parallel)) {
-        sample_stop = nrow(metadata_t)
-      } else {
-        sample_stop  = i*parallel
-      }
+  k = 1
+  t = 1
+  while(k <= nrow(metadata_t) | any(grepl(paste0(metadata_t$sample, collapse = "|"), system("docker ps", intern = TRUE)[-1]))) {
 
-      for (ii in sample_start:sample_stop) {
-        metadata_c_i <- metadata_c[which(metadata_c$patient == metadata_t$patient[ii]), ]
-        system(paste0("docker run --rm -d --name ", metadata_t$sample[ii]," -v ", input_dir, ":", input_dir, " -v ", output_dir, ":", output_dir, " -v ",
-                      dirname(reference), ":", dirname(reference), " broadinstitute/gatk:4.2.2.0 gatk Mutect2 -R ", reference,
-                      " -I ", input_dir, metadata_t$sample[ii], "_markdup.bam ", "-I ", input_dir, metadata_c_i$sample, "_markdup.bam ",
-                      "-normal ", metadata_c_i$sample, " -O ", output_dir, metadata_t$sample[ii], ".vcf"))
-      }
-      k = 1
-      while(any(grepl(paste0(metadata_t$sample[sample_start:sample_stop], collapse = "|"), system("docker ps", intern = TRUE)[-1]))) {
-        dockerps = system("docker ps", intern = TRUE)[-1]
-        for (iii in sample_start:sample_stop) {
-          if (any(grepl(metadata_t$sample[iii], dockerps))) {
-            print(paste0("Container ", metadata_t$sample[iii], " still running"))
-          }
-        }
-        Sys.sleep(300)
-        print(paste0("Analysis running for: ", k*5, " minutes"))
-        k = k+1
-      }
+    while(sum(grepl(paste0(metadata_t$sample, collapse = "|"), system("docker ps", intern = TRUE)[-1])) < parallel & k <= nrow(metadata_t)) {
+
+      metadata_c_i <- metadata_c[which(metadata_c$patient == metadata_t$patient[k]), ]
+      system(paste0("docker run --rm -d --name ", metadata_t$sample[k]," -v ", input_dir, ":", input_dir, " -v ", output_dir, ":", output_dir, " -v ",
+                    dirname(reference), ":", dirname(reference), " broadinstitute/gatk:4.2.2.0 gatk Mutect2 -R ", reference,
+                    " -I ", input_dir, metadata_t$sample[k], "_markdup.bam ", "-I ", input_dir, metadata_c_i$sample, "_markdup.bam ",
+                    "-normal ", metadata_c_i$sample, " -O ", output_dir, metadata_t$sample[k], ".vcf"))
+      k = k+1
     }
+
+    while(sum(grepl(paste0(metadata_t$sample, collapse = "|"), system("docker ps", intern = TRUE)[-1])) == parallel) {
+      dockerps = system("docker ps", intern = TRUE)[-1]
+      for (i in 1:nrow(metadata_t)) {
+        if (any(grepl(metadata_t$sample[i], dockerps))) {
+          print(paste0("Container ", metadata_t$sample[i], " still running"))
+        }
+      }
+      Sys.sleep(300)
+      print(paste0("Mutect2 analysis running for approximately: ", t*5, " minutes"))
+      t = t+1
+    }
+
   }
 }
 
