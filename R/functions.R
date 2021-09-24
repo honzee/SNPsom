@@ -44,6 +44,7 @@ trimmomatic = function(metadata, input_dir, output_dir, t = 2, min_length = 20) 
 #'@param output_dir character; path to output directory
 #'@param reference character; path to the fasta genome reference file. Bwa-mem2 created index must be in the same directory.
 #'@param t numeric; number of threads to use; default-2
+
 bwa_mem2 = function(metadata, input_dir, output_dir, reference, t = 2) {
 
   if(!file.exists(sub(".fa$|.fasta$", ".bwt.2bit.64", reference))) {
@@ -70,7 +71,7 @@ bwa_mem2 = function(metadata, input_dir, output_dir, reference, t = 2) {
 #'@param output_dir character; path to output directory
 #'@param reference character; path to the fasta genome reference file. Bwa-mem2 created index must be in the same directory.
 #'@param t numeric; number of threads to use; default-2
-#'
+
 MarkDuplicatesSpark = function(metadata, input_dir, output_dir, t = 2) {
   for (i in 1:nrow(metadata)) {
     system(paste0("docker run --rm -i -v ", input_dir, ":", input_dir, " -v ", output_dir, ":", output_dir,
@@ -91,7 +92,7 @@ MarkDuplicatesSpark = function(metadata, input_dir, output_dir, t = 2) {
 #'@param reference character; path to the fasta genome reference file. Bwa-mem2 created index must be in the same directory.
 #'@param t numeric; number of threads to use; default-2
 #'@param parallel; how many samples should be ran in parallel, each one will need around 15 GB of RAM
-#'
+
 Mutect2 = function(metadata, input_dir, output_dir, reference, parallel) {
 
   # check for reference dictionary file and samtools index
@@ -150,6 +151,15 @@ Mutect2 = function(metadata, input_dir, output_dir, reference, parallel) {
   }
 }
 
+#' Add filter information to somatic variants produced by Mutect2
+#'
+#' Adds information into the filter column of the vcf file produced by Mutect2
+#'
+#'@param metadata data frame;
+#'@param input_dir character; path to the input directory
+#'@param output_dir character; path to output directory
+#'@param reference character; path to the fasta genome reference file. Bwa-mem2 created index must be in the same directory.
+
 FilterMutectCalls <- function(metadata, input_dir, output_dir, reference) {
   metadata_t = metadata[metadata$status == "t", ]
   for (i in 1:nrow(metadata_t)) {
@@ -158,6 +168,19 @@ FilterMutectCalls <- function(metadata, input_dir, output_dir, reference) {
                   " -V ", input_dir, metadata_t$sample[i], ".vcf", " -O ", output_dir, metadata_t$sample[i], "_filtered.vcf"))
   }
 }
+
+#' Annotate SNPs with Funcotator
+#'
+#' Funcotator annotates the SNPs with information stored in the annotation_dir. This directory has to be in specific format described more in detail here:
+#' https://gatk.broadinstitute.org/hc/en-us/articles/4404604573851-Funcotator
+#' The reference chromosome names have to be in format: chr1, chr2 ... in order for the Funcotator default database to work.
+#'
+#'@param metadata data frame;
+#'@param input_dir character; path to the input directory
+#'@param output_dir character; path to output directory
+#'@param reference character; path to the fasta genome reference file. Bwa-mem2 created index must be in the same directory.
+#'@param reference_version character; either "hg38" or "hg19"
+#'@annotation_dir character; path to the directory with annotation data according to the Funcotator format
 
 Funcotator <- function(metadata, input_dir, output_dir, reference, reference_version, annotation_dir) {
   metadata_t = metadata[metadata$status == "t", ]
