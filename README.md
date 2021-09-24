@@ -4,11 +4,13 @@
 This package is under development.
 
 ### An R package providing a containerized GATK-based pipeline for analyzing somatic variants
-The package is based on GATK4 guidelines with docker containerized tools and shiny application interface. Containerization through docker provides high level of reproducibility and easy deployment without the need of installation of each tool and its requirements. In addition, implemented deployment of multiple docker containers enables parallel processing for functions without multi-threading options - Mutect2
+The package is based on GATK4 guidelines and provides docker containerized tools and shiny application interface. Containerization through docker provides high level of reproducibility and easy deployment without the need of installation of each tool and its requirements. In addition, implemented deployment of multiple docker containers enables parallel processing for functions without multi-threading options (Mutect2).
 
 ### Table of contents
 1.[Installation](#installation)<br><TD style="FONT-SIZE:13px; COLOR:#000000; LINE-HEIGHT:20px; FONT-FAMILY:Arial,Helvetica,sans-serif">
+
 2.[Functionality](#functionality)<br><TD style="FONT-SIZE:13px; COLOR:#000000; LINE-HEIGHT:20px; FONT-FAMILY:Arial,Helvetica,sans-serif">
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.[Input](#input)<br><TD style="FONT-SIZE:13px; COLOR:#000000; LINE-HEIGHT:20px; FONT-FAMILY:Arial,Helvetica,sans-serif">
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.[Config](#config)<br><TD style="FONT-SIZE:13px; COLOR:#000000; LINE-HEIGHT:20px; FONT-FAMILY:Arial,Helvetica,sans-serif">
