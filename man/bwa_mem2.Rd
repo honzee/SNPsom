@@ -19,5 +19,6 @@ bwa_mem2(metadata, input_dir, output_dir, reference, t = 2)
 }
 \description{
 Bwa-mem2 is faster than bwa-mem and produces the same results. This function also assigns Read group ID and sample name to the bam header,
-which is necessary for downstream GATK4 analysis.
+which is necessary for downstream GATK4 analysis. Checks for reference index file. If it does not exit, it is automatically created in the reference
+directory.
 }

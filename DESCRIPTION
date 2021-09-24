@@ -1,16 +1,17 @@
 Package: SNPsom
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Containerized Somatic Variant Analysis
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Jan",
+           family = "Barinka",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+           email = "honzabarinka@seznam.cz"
+Description: Somatic variant analysis pipeline using version-specific docker images to manage dependancies. Installed and running docker is necessary for its function. The pipeline was constructed in accordance with GATK 4 guidelines.
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Imports:
+  shiny
+Depends:
+  shiny

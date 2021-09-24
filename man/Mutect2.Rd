@@ -20,5 +20,7 @@ Mutect2(metadata, input_dir, output_dir, reference, parallel)
 \item{parallel;}{how many samples should be ran in parallel, each one will need around 15 GB of RAM}
 }
 \description{
-Run Mutect2 with the option to run multiple samples in parallel.
+Run Mutect2 with the option to run multiple samples in parallel. Chekcs for
+GATK sequence dictionary and samtools index, if the files do not exist, they
+will be automatically created.
 }
