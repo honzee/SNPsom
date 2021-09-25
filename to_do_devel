@@ -1,0 +1,15 @@
+Required:
+  Database based variant filtering
+  Cross-checking pipeline results
+  Log file creation
+  Shiny progress tracking
+Optional:
+  Qualimap - quality control of mapping
+  Assignment of read group id for separate fastq files from different lanes
+  Optimize Mutect2 parameters
+  Create panel of normals/implement panel of normals into the pipeline
+  Mutect parallelization by sample splitting (interval-based of chromosome-based)
+  Add Base score recalibration
+  Add contamination calculation
+  Add strand bias calculation
+  
