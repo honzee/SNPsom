@@ -1,2 +1,6 @@
 .Rproj.user
 .packages.R
+.Rbuildignore
+.Rhistory
+.gitignore
+SNPsom.Rproj
